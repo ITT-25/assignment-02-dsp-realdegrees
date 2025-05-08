@@ -1,24 +1,65 @@
-from typing import List
-from mido import MidiFile
+from typing import Dict, List, Literal, cast
+from mido import MidiFile, Message
 
-from karaoke_game.note import Note
+from note import Note
 
-
+class TypeSafeMidoMessage():
+    def __init__(self, message: Message) -> None:
+        self.type: Literal["note_on", "note_off"] = cast(Literal["note_on", "note_off"], message.type)
+        self.time: float = getattr(message, "time", 0)
+        self.note: int = getattr(message, "note", 0)
+        self.duration: float = 0
+        self.velocity: int = getattr(message, "velocity", 0)
+        
 class Song:
     """Creates a timeline of pyglet objects to be drawn and processed sequentially on the X axis in the window."""
-    # TODO: Init a list of Notes that each represent a tone in the song, group the objects, move the entire group to the left on update
     # TODO: Somehow connect this to the "voice cursor" and update individual note states based on cursor position
+    notes: List[Note] = []
     
-    def __init__(self, file: MidiFile) -> None:
+    def __init__(self, file: MidiFile, track: int) -> None:
         """Load and initialize the provided song"""
         self.file = file
-        self.notes: List[Note] = []
-        for note in self.file.play():
-            print(note)
-            # TODO: Create a note object for each note in the midi file and add it to the notes group
+        self.track = track
 
-    
+    def init_notes(self) -> None:
+        """Calculate and set the duration of each note based on the time between note_on and note_off events.
+        
+        Returns a list of Note objects with their duration and time set."""
+        
+        time = 0
+        note_cache: Dict[int, float] = {}
+        notes: List[TypeSafeMidoMessage] = []
+        
+        for msg in self.file.tracks[self.track]:
+            if not hasattr(msg, "type") or not isinstance(msg, Message):
+                continue
+            
+            note = TypeSafeMidoMessage(msg)
+            note.time /= 1000  # Convert to seconds
+            time += note.time
+            
+            if note.type == "note_on":
+                note_cache[note.note] = time
+            elif note.type == "note_off" and note.note in note_cache:
+                start_time = note_cache.pop(note.note)
+                note.duration = time - start_time
+                note.time = start_time  # Set the note's time to its actual start time
+                notes.append(note)
+      
+        # Find the note with the lowest time and subtract it from all notes to start at 0
+        min_time = min([note.time for note in notes])
+        print(f"Min time: {min_time}")
+        for note in notes:
+            note.time -= min_time
+        self.notes = [Note(note.duration, note.time, note.note) for note in notes]
+        
     def update(self, dt: float) -> None:
         """Updates the song's progress"""
-        # TODO: Progress the song by moving the notes group and forward update to each note
-        pass
+        if len(self.notes) == 0:
+            return
+        
+        # TODO: store the current voice cursor position to check against the notes
+        voice_cursor_position = ...
+        for note in self.notes:
+            note.move(dt)
+            # TODO: Check for overlap with voice cursor, if overlap increase note completion
