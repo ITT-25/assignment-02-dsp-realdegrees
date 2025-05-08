@@ -2,6 +2,7 @@ import sys
 from pyglet import window, clock, app
 from config import Config
 
+# TODO: add "click" for setting the song via the cli, then create a new song instance in the window class
 
 class GameWindow(window.Window):
     def __init__(self):
