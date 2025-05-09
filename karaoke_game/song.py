@@ -15,11 +15,13 @@ class Song:
     """Creates a timeline of pyglet objects to be drawn and processed sequentially on the X axis in the window."""
     # TODO: Somehow connect this to the "voice cursor" and update individual note states based on cursor position
     notes: List[Note] = []
+    current_song_time: float = 0.0 # Add current_song_time
     
     def __init__(self, file: MidiFile, track: int) -> None:
         """Load and initialize the provided song"""
         self.file = file
         self.track = track
+        self.current_song_time = 0.0 # Initialize current_song_time
 
     def init_notes(self) -> None:
         """Calculate and set the duration of each note based on the time between note_on and note_off events.
@@ -58,8 +60,10 @@ class Song:
         if len(self.notes) == 0:
             return
         
+        self.current_song_time += dt # Increment current_song_time
+        
         # TODO: store the current voice cursor position to check against the notes
-        voice_cursor_position = ...
+        # voice_cursor_position = ...
         for note in self.notes:
-            note.move(dt)
+            note.update_position(self.current_song_time) # Call update_position instead of move
             # TODO: Check for overlap with voice cursor, if overlap increase note completion
