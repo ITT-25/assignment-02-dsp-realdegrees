@@ -45,25 +45,28 @@ class Song:
             elif note.type == "note_off" and note.note in note_cache:
                 start_time = note_cache.pop(note.note)
                 note.duration = time - start_time
-                note.time = start_time  # Set the note's time to its actual start time
+                note.time = start_time
                 notes.append(note)
       
-        # Find the note with the lowest time and subtract it from all notes to start at 0
         min_time = min([note.time for note in notes])
-        print(f"Min time: {min_time}")
+        note_baseline = min([note.note for note in notes])
+
         for note in notes:
             note.time -= min_time
-        self.notes = [Note(note.duration, note.time, note.note) for note in notes]
+        
+
+        
+        self.notes = [Note(note.duration, note.time, note.note, note_baseline) for note in notes]
         
     def update(self, dt: float) -> None:
         """Updates the song's progress"""
         if len(self.notes) == 0:
             return
         
-        self.current_song_time += dt # Increment current_song_time
+        self.current_song_time += dt
         
         # TODO: store the current voice cursor position to check against the notes
-        # voice_cursor_position = ...
+        voice_cursor_position = ...
         for note in self.notes:
-            note.update_position(self.current_song_time) # Call update_position instead of move
+            note.update_position(self.current_song_time)
             # TODO: Check for overlap with voice cursor, if overlap increase note completion
