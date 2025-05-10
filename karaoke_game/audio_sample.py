@@ -2,12 +2,14 @@ import pyaudio
 import numpy as np
 from matplotlib import pyplot as plt
 
+from util import apply_window, band_pass, detect_frequency, freq_to_midi, smooth_signal
+
 # Set up audio stream
 # reduce chunk size and sampling rate for lower latency
 CHUNK_SIZE = 1024  # Number of audio frames per buffer
 FORMAT = pyaudio.paInt16  # Audio format
 CHANNELS = 1  # Mono audio
-RATE = 44100  # Audio sampling rate (Hz)
+RATE = 1024 * 8  # Audio sampling rate (Hz)
 p = pyaudio.PyAudio()
 
 # print info about audio devices
@@ -46,6 +48,15 @@ while True:
 
     # Convert audio data to numpy array
     data = np.frombuffer(data, dtype=np.int16)
+    
+    # Improve signal
+    data = band_pass(data, lowcut=80, highcut=1000, fs=RATE)
+    data = smooth_signal(data, window_size=64)
+    data = apply_window(data, window_type='hamming')
+
+    freq = detect_frequency(data, sample_rate=RATE)
+    midi_note = freq_to_midi(freq)
+    print(f"Frequency: {freq:.2f} Hz, MIDI Note: {midi_note}")
     line.set_ydata(data)
 
     # Redraw plot
