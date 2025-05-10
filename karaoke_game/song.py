@@ -4,6 +4,8 @@ from mido import MidiFile, Message
 from note import Note
 
 class TypeSafeMidoMessage():
+    song_baseline: int = 0
+    
     def __init__(self, message: Message) -> None:
         self.type: Literal["note_on", "note_off"] = cast(Literal["note_on", "note_off"], message.type)
         self.time: float = getattr(message, "time", 0)
@@ -49,14 +51,14 @@ class Song:
                 notes.append(note)
       
         min_time = min([note.time for note in notes])
-        note_baseline = min([note.note for note in notes])
+        self.note_baseline = min([note.note for note in notes])
 
         for note in notes:
             note.time -= min_time
         
 
         
-        self.notes = [Note(note.duration, note.time, note.note, note_baseline) for note in notes]
+        self.notes = [Note(note.duration, note.time, note.note, self.note_baseline) for note in notes]
         
     def update(self, dt: float) -> None:
         """Updates the song's progress"""

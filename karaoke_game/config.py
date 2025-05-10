@@ -2,11 +2,15 @@ import os
 from pyglet.graphics import Batch
 
 class Config:
+    SAMPLING_RATE = 1024 * 4 * 10
+    BUFFER_SIZE = 1024 * 4
+    
     WINDOW_WIDTH = 800
     WINDOW_HEIGHT = 600
     SONG_DIRECTORY = os.path.abspath(os.path.join(
         os.path.dirname(__file__), "songs")) + os.sep
     BATCH = Batch()
+    
     PIXELS_PER_SECOND = 150  # e.g., 1 second of music maps to 100 pixels
     PLAY_LINE_X = WINDOW_WIDTH / 2
     BASELINE_Y = 100 

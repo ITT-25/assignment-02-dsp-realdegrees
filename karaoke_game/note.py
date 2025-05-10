@@ -9,22 +9,20 @@ NOTE_HEIGHT = 25
 class Note:
     """Wraps a pyglet representation of a note and holds additional song relevant metadata."""
 
-    def __init__(self, duration: float, time: float, note: int, note_baseline: int) -> None:
+    def __init__(self, duration: float, time: float, note: int, baseline: int) -> None:
         """Initialize the note with the provided duration and time"""
         self.completion = 0.0
         self.duration = duration
         self.time = time
         self.note = note
-        print(
-            f"Note created with duration: {duration}, time: {time}, note: {note}")
 
         x = Config.PLAY_LINE_X + (self.time * Config.PIXELS_PER_SECOND)
         width = self.duration * Config.PIXELS_PER_SECOND
         height = NOTE_HEIGHT
 
         # Calculate y based on the note's value relative to the baseline which ensures notes are stacked correctly
-        y = Config.BASELINE_Y + (self.note - note_baseline) * height
-
+        y = Config.BASELINE_Y + (self.note - baseline) * height
+        print(f"y: {y}, note: {self.note}, baseline: {baseline}")
         self.base_color = Config.BASE_NOTE_COLORS[self.note % len(Config.BASE_NOTE_COLORS)]
 
         self.shape_bg = RoundedRectangle(

@@ -3,20 +3,21 @@ from mido import MidiFile
 from pyglet import window, clock, app
 from config import Config
 import click
-
 from song import Song
-
-# TODO: add "click" for setting the song via the cli, then create a new song instance in the window class
+from voice import FrequencyCursor
 
 class GameWindow(window.Window):
-    def __init__(self, song: Song):
+    def __init__(self, song: Song, cursor: FrequencyCursor):
         super().__init__(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT)
         self.set_caption("Karaoke Game")
         self.set_visible(True)
+        self.cursor = cursor
+        self.cursor.init_cursor()
         self.song = song
         self.song.init_notes()
 
     def on_update(self, delta_time):
+        self.cursor.update(delta_time)
         self.song.update(delta_time)
 
     def on_draw(self):
@@ -52,7 +53,9 @@ def run(song: str, track: int):
         return
     
     song = Song(midi, track)
-    win = GameWindow(song)
+    voice = FrequencyCursor(song)
+
+    win = GameWindow(song, voice)
     clock.schedule_interval(win.on_update, 1 / 60.0)
     app.run()
 
