@@ -75,11 +75,6 @@ class Song:
             return
         
         self.current_song_time += dt
-        active_note = self.active_note()
-        print(f"Active note: {active_note.note if active_note else None}")
-        
-        # TODO: store the current voice cursor position to check against the notes
-        voice_cursor_position = ...
+
         for note in self.notes:
             note.update_position(self.current_song_time)
-            # TODO: Check for overlap with voice cursor, if overlap increase note completion

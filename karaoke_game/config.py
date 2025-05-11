@@ -6,7 +6,7 @@ class Config:
     BUFFER_SIZE = 1024 * 8 # ! Buffer minimum 8 or jumps will happen at lower frequencies
     AMPLITUDE_THRESHOLD = 250
     
-    SNAP_THRESHOLD = 2
+    SNAP_THRESHOLD = 4
     
     WINDOW_WIDTH = 800
     WINDOW_HEIGHT = 600

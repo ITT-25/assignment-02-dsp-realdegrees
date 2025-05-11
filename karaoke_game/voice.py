@@ -102,8 +102,11 @@ class FrequencyCursor:
 
     def update(self, delta_time: float) -> None:
         if not self.cursor or not self.frequency:
+            self.cursor.x = -self.cursor.radius
             return
-
+        else:
+            self.cursor.x = Config.PLAY_LINE_X
+            
         # Get the y position correlating to the audio frequency
         y_position = note_to_y_position(
             self.midi_note,
@@ -115,6 +118,7 @@ class FrequencyCursor:
         active_note = self.song.active_note()
         if active_note and abs(active_note.note - self.midi_note) < Config.SNAP_THRESHOLD:
             y_position = active_note.shape_bg.y
+            active_note.completion += delta_time / active_note.duration
         
 
         # TODO cursor radius needs to be added at some point so it's in the center of the note, not sure where its best though yet
