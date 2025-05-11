@@ -5,6 +5,7 @@ from config import Config
 import click
 from song import Song
 from voice import FrequencyCursor
+from pyglet.shapes import Line
 
 class GameWindow(window.Window):
     def __init__(self, song: Song, cursor: FrequencyCursor):
@@ -16,6 +17,9 @@ class GameWindow(window.Window):
         self.cursor.start_audio_loop()
         self.song = song
         self.song.init_notes()
+        
+        # Init Playline
+        self.playline = Line(x=Config.PLAY_LINE, y=0, x2=Config.PLAY_LINE, y2=Config.WINDOW_HEIGHT, thickness=2, color=(255, 255, 255, 120), batch=Config.BATCH)
 
     def on_update(self, delta_time):
         self.cursor.update(delta_time)
