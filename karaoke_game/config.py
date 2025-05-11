@@ -3,7 +3,10 @@ from pyglet.graphics import Batch
 
 class Config:
     SAMPLING_RATE = 1024 * 4 * 10
-    BUFFER_SIZE = 1024 * 4
+    BUFFER_SIZE = 1024 * 8 # ! Buffer minimum 8 or jumps will happen at lower frequencies
+    AMPLITUDE_THRESHOLD = 250
+    
+    SNAP_THRESHOLD = 2
     
     WINDOW_WIDTH = 800
     WINDOW_HEIGHT = 600
@@ -11,8 +14,8 @@ class Config:
         os.path.dirname(__file__), "songs")) + os.sep
     BATCH = Batch()
     
-    PIXELS_PER_SECOND = 150  # e.g., 1 second of music maps to 100 pixels
-    PLAY_LINE_X = WINDOW_WIDTH / 2
+    PIXELS_PER_SECOND = 100  # e.g., 1 second of music maps to 100 pixels
+    PLAY_LINE_X = min(150, WINDOW_WIDTH / 5)
     BASELINE_Y = 100 
 
     COMPLETED_NOTE_COLOR = (255, 215, 0) # Gold
@@ -25,3 +28,4 @@ class Config:
         (255, 0, 128),  # Magenta
         (128, 255, 0),  # Lime
     ]
+    NOTE_HEIGHT = 18

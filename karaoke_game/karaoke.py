@@ -13,6 +13,7 @@ class GameWindow(window.Window):
         self.set_visible(True)
         self.cursor = cursor
         self.cursor.init_cursor()
+        self.cursor.start_audio_loop()
         self.song = song
         self.song.init_notes()
 
@@ -30,8 +31,9 @@ class GameWindow(window.Window):
         return super().on_resize(width, height)
 
     def on_close(self):
-        super().on_close()
         clock.unschedule(self.on_update)
+        self.cursor.close_audio_loop()
+        super().on_close()
         app.exit()
 
 @click.command()
@@ -41,7 +43,13 @@ class GameWindow(window.Window):
 @click.option(
     "--track", "-t", required=False, help="The index of the track that should be used for the voice match", type=int, default=0
 )
-def run(song: str, track: int):
+@click.option(
+    "--verbose", "-v", required=False, help="Logs the captured frequency, resulting MIDI note and octave", is_flag=True, default=False
+)
+@click.option(
+    "--octave-offset", "-o", required=False, help="Offsets the octave of audio input by this amount (Set positive for deep voices and negative for high voices)", type=int, default=0
+)
+def run(song: str, track: int, verbose: bool, octave_offset: int):
     try:
         midi = MidiFile(Config.SONG_DIRECTORY + song + ".mid")
     except Exception:
@@ -53,10 +61,24 @@ def run(song: str, track: int):
         return
     
     song = Song(midi, track)
-    voice = FrequencyCursor(song)
+    voice = FrequencyCursor(song, octave_offset)
 
     win = GameWindow(song, voice)
-    clock.schedule_interval(win.on_update, 1 / 60.0)
+    def update(dt):
+        win.on_update(dt)
+        if verbose:
+            frequency = voice.frequency if voice.frequency is not None else -1
+            midi_note = voice.midi_note if voice.midi_note is not None else -1
+            
+            pitch = midi_note % 12
+            octave = midi_note // 12 - 1
+            
+            if frequency != -1:
+                print(f"Frequency: {frequency:.2f} Hz, MIDI Note: {midi_note}, Pitch: {pitch}, Octave: {octave}")
+            else:
+                print("No frequency detected.")
+
+    clock.schedule_interval(update, 1 / 60.0)
     app.run()
 
 
