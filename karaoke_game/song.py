@@ -1,6 +1,7 @@
 from typing import Dict, List, Literal, cast
 from mido import MidiFile, Message
 
+from config import Config
 from note import Note
 
 class TypeSafeMidoMessage():
@@ -58,7 +59,15 @@ class Song:
         
 
         
-        self.notes = [Note(note.duration, note.time, note.note, self.note_baseline) for note in notes]
+        self.notes = [Note(note.duration, note.time, note.note, note.velocity, self.note_baseline) for note in notes]
+        
+    def active_note(self) -> Note:
+        """Returns the note that is currently at the cursor's x position"""
+        if len(self.notes) == 0:
+            return None
+        for note in self.notes:
+            if note.shape_bg.x < Config.PLAY_LINE_X and note.shape_bg.x + note.shape_bg.width > Config.PLAY_LINE_X:
+                return note
         
     def update(self, dt: float) -> None:
         """Updates the song's progress"""
@@ -66,6 +75,8 @@ class Song:
             return
         
         self.current_song_time += dt
+        active_note = self.active_note()
+        print(f"Active note: {active_note.note if active_note else None}")
         
         # TODO: store the current voice cursor position to check against the notes
         voice_cursor_position = ...
