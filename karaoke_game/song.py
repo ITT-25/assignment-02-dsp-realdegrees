@@ -18,14 +18,22 @@ class Song:
     """Creates a timeline of pyglet objects to be drawn and processed sequentially on the X axis in the window."""
     # TODO: Somehow connect this to the "voice cursor" and update individual note states based on cursor position
     notes: List[Note] = []
-    current_song_time: float = 0.0 # Add current_song_time
+    total_time: float = 0.0
     
     def __init__(self, file: MidiFile, track: int) -> None:
         """Load and initialize the provided song"""
         self.file = file
         self.track = track
-        self.current_song_time = 0.0 # Initialize current_song_time
+        self.total_time = 0.0
+        self.song_time = 0.0
 
+    def reset(self) -> None:
+        """Reset the song's state"""
+        self.total_time = 0.0
+        self.song_time = 0.0
+        self.notes = []
+        self.init_notes()
+            
     def init_notes(self) -> None:
         """Calculate and set the duration of each note based on the time between note_on and note_off events.
         
@@ -40,7 +48,7 @@ class Song:
                 continue
             
             note = TypeSafeMidoMessage(msg)
-            note.time /= 1000  # Convert to seconds
+            note.time /= 1000
             time += note.time
             
             if note.type == "note_on":
@@ -68,13 +76,21 @@ class Song:
         for note in self.notes:
             if note.shape_bg.x < Config.PLAY_LINE and note.shape_bg.x + note.shape_bg.width > Config.PLAY_LINE:
                 return note
-        
+            
+    def is_completed(self) -> tuple[bool, float]:
+        """Returns True if the song is completed"""
+        max_time = max([note.time + note.duration for note in self.notes])
+        return self.song_time >= max_time, abs(max_time - self.song_time)
+
     def update(self, dt: float) -> None:
         """Updates the song's progress"""
         if len(self.notes) == 0:
             return
         
-        self.current_song_time += dt
+        self.total_time += dt
 
         for note in self.notes:
-            note.update_position(self.current_song_time)
+            note.update_position(self.total_time)
+            
+        if self.notes[0].shape_bg.x < Config.PLAY_LINE:
+            self.song_time += dt

@@ -3,12 +3,14 @@ from mido import MidiFile
 from pyglet import window, clock, app
 from config import Config
 import click
+from ui import UI
 from song import Song
 from voice import FrequencyCursor
 from pyglet.shapes import Line
+from pyglet.window import key
 
 class GameWindow(window.Window):
-    def __init__(self, song: Song, cursor: FrequencyCursor):
+    def __init__(self, song: Song, cursor: FrequencyCursor, ui: UI):
         super().__init__(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT)
         self.set_caption("Karaoke Game")
         self.set_visible(True)
@@ -17,13 +19,21 @@ class GameWindow(window.Window):
         self.cursor.start_audio_loop()
         self.song = song
         self.song.init_notes()
-        
+        self.ui = ui
+        self.ui.init()
+
         # Init Playline
         self.playline = Line(x=Config.PLAY_LINE, y=0, x2=Config.PLAY_LINE, y2=Config.WINDOW_HEIGHT, thickness=2, color=(255, 255, 255, 120), batch=Config.BATCH)
 
+    def reset(self):
+        """Reset the game state."""
+        self.song.reset()
+
+        
     def on_update(self, delta_time):
         self.cursor.update(delta_time)
         self.song.update(delta_time)
+        self.ui.update()
 
     def on_draw(self):
         self.clear()
@@ -66,10 +76,17 @@ def run(song: str, track: int, verbose: bool, octave_offset: float):
     
     song = Song(midi, track)
     voice = FrequencyCursor(song, octave_offset)
+    ui = UI(song)
 
-    win = GameWindow(song, voice)
+    win = GameWindow(song, voice, ui)
+    keys = key.KeyStateHandler()
+    win.push_handlers(keys)
+    
     def update(dt):
         win.on_update(dt)
+        if keys[key.R]:
+            win.reset()
+            
         if verbose:
             frequency = voice.frequency if voice.frequency is not None else -1
             midi_note = voice.midi_note if voice.midi_note is not None else -1

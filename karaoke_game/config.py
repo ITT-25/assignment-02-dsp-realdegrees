@@ -7,7 +7,7 @@ class Config:
     AMPLITUDE_THRESHOLD = 250
     
     SNAP_THRESHOLD = 4
-    SCROLL_SPEED = 100 # Pixels per second for notes and trail
+    SCROLL_SPEED = 200 # Pixels per second for notes and trail
     
     WINDOW_WIDTH = 1200
     WINDOW_HEIGHT = 800
@@ -30,4 +30,4 @@ class Config:
         (128, 255, 0),  # Lime
     ]
     NOTE_HEIGHT = 18
-    NOTE_WIDTH_PER_SECOND = 50
+    NOTE_WIDTH_PER_SECOND = 100
