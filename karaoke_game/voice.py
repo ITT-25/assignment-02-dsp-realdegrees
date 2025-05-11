@@ -18,7 +18,7 @@ class FrequencyCursor:
     midi_note: Optional[int] = None
     freq_window: Deque[float] = deque(maxlen=3)
 
-    def __init__(self, song: "Song", octave_offset: int = 0) -> None:
+    def __init__(self, song: "Song", octave_offset: float = 0.0) -> None:
         self.song = song
         self.octave_offset = octave_offset
         self.audio = PyAudio()
@@ -96,10 +96,10 @@ class FrequencyCursor:
         freq = detect_frequency(data, sample_rate=Config.SAMPLING_RATE)
         self.freq_window.append(freq)
         self.frequency = sum(self.freq_window) / len(self.freq_window)
-        self.midi_note = freq_to_midi(self.frequency) + 8 * self.octave_offset
+        self.midi_note = freq_to_midi(self.frequency) + int(8 * self.octave_offset)
 
     def init_cursor(self) -> None:
-        self.cursor = Circle(Config.PLAY_LINE, 0, Config.NOTE_HEIGHT // 1.5,
+        self.cursor = Circle(Config.PLAY_LINE, 0, Config.NOTE_HEIGHT // 2,
                              segments=12, color=(255, 255, 255), batch=Config.BATCH)
 
     def update(self, delta_time: float) -> None:
@@ -124,7 +124,6 @@ class FrequencyCursor:
             active_note.completion += delta_time / active_note.duration * (Config.SCROLL_SPEED / Config.NOTE_WIDTH_PER_SECOND)
         
 
-        current_y = self.cursor.y
-        self.cursor.y = current_y + (y_position - current_y) * min(delta_time * 10, 2) + self.cursor.radius
+        self.cursor.y += (y_position - self.cursor.y) * .2
 
         self.trail.update(delta_time, True, self.cursor.y)

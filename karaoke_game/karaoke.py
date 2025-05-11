@@ -51,9 +51,9 @@ class GameWindow(window.Window):
     "--verbose", "-v", required=False, help="Logs the captured frequency, resulting MIDI note and octave", is_flag=True, default=False
 )
 @click.option(
-    "--octave-offset", "-o", required=False, help="Offsets the octave of audio input by this amount (Set positive for deep voices and negative for high voices)", type=int, default=0
+    "--octave-offset", "-o", required=False, help="Offsets the octave of audio input by this amount (Set positive for deep voices and negative for high voices)", type=float, default=0
 )
-def run(song: str, track: int, verbose: bool, octave_offset: int):
+def run(song: str, track: int, verbose: bool, octave_offset: float):
     try:
         midi = MidiFile(Config.SONG_DIRECTORY + song + ".mid")
     except Exception:

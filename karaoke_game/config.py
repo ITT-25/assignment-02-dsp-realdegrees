@@ -3,7 +3,7 @@ from pyglet.graphics import Batch
 
 class Config:
     SAMPLING_RATE = 1024 * 4 * 10
-    BUFFER_SIZE = 1024 * 8 # ! Buffer minimum 8 or jumps will happen at lower frequencies
+    BUFFER_SIZE = 1024 * 10 # ! Buffer minimum 8 or jumps will happen at lower frequencies
     AMPLITUDE_THRESHOLD = 250
     
     SNAP_THRESHOLD = 4
