@@ -7,16 +7,17 @@ class Config:
     AMPLITUDE_THRESHOLD = 250
     
     SNAP_THRESHOLD = 4
+    SCROLL_SPEED = 100 # Pixels per second for notes and trail
     
-    WINDOW_WIDTH = 800
-    WINDOW_HEIGHT = 600
+    WINDOW_WIDTH = 1200
+    WINDOW_HEIGHT = 800
     SONG_DIRECTORY = os.path.abspath(os.path.join(
         os.path.dirname(__file__), "songs")) + os.sep
     BATCH = Batch()
     
-    PIXELS_PER_SECOND = 100  # e.g., 1 second of music maps to 100 pixels
-    PLAY_LINE_X = min(150, WINDOW_WIDTH / 5)
-    BASELINE_Y = 100 
+    PLAY_LINE = min(500, WINDOW_WIDTH // 3)
+
+    BASELINE_Y = WINDOW_HEIGHT // 2 
 
     COMPLETED_NOTE_COLOR = (255, 215, 0) # Gold
     DEFAULT_NOTE_COLOR = (128, 128, 128)  # Gray
@@ -29,3 +30,4 @@ class Config:
         (128, 255, 0),  # Lime
     ]
     NOTE_HEIGHT = 18
+    NOTE_WIDTH_PER_SECOND = 50

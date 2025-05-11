@@ -25,8 +25,8 @@ class Note:
             note_baseline
         )
         
-        x = Config.WINDOW_WIDTH + (self.time * Config.PIXELS_PER_SECOND)
-        width = self.duration * Config.PIXELS_PER_SECOND
+        x = Config.WINDOW_WIDTH + (self.time * Config.SCROLL_SPEED)
+        width = self.duration * Config.NOTE_WIDTH_PER_SECOND
         height = Config.NOTE_HEIGHT
         
         self.base_color = Config.BASE_NOTE_COLORS[self.note % len(Config.BASE_NOTE_COLORS)]
@@ -52,7 +52,7 @@ class Note:
         
     def update_position(self, current_song_time: float) -> None:
         """Update the note's X position and progress color based on the current song time and completion."""
-        current_x_offset = (self.time - current_song_time) * Config.PIXELS_PER_SECOND
+        current_x_offset = (self.time - current_song_time) * Config.SCROLL_SPEED
         new_x = Config.WINDOW_WIDTH + current_x_offset
 
         self.shape_bg.x = new_x

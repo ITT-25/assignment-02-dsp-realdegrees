@@ -2,9 +2,10 @@ from typing import TYPE_CHECKING, Optional, Deque
 from collections import deque
 import numpy as np
 from pyaudio import PyAudio, paInt16
-from pyglet.shapes import Circle
+from pyglet.shapes import Circle  # Line is no longer directly used here
 from config import Config
 from util import apply_window, detect_frequency, band_pass, freq_to_midi, note_to_y_position, smooth_signal
+from trail import Trail  # Import the new Trail class
 
 if TYPE_CHECKING:
     from song import Song
@@ -21,6 +22,7 @@ class FrequencyCursor:
         self.song = song
         self.octave_offset = octave_offset
         self.audio = PyAudio()
+        self.trail = Trail()  # Instantiate Trail handler
 
         self.stream = self.audio.open(
             format=paInt16,
@@ -97,15 +99,16 @@ class FrequencyCursor:
         self.midi_note = freq_to_midi(self.frequency) + 8 * self.octave_offset
 
     def init_cursor(self) -> None:
-        self.cursor = Circle(Config.PLAY_LINE_X, 0, 10,
-                             segments=12, color=(255, 0, 0), batch=Config.BATCH)
+        self.cursor = Circle(Config.PLAY_LINE, 0, Config.NOTE_HEIGHT // 1.5,
+                             segments=12, color=(255, 255, 255), batch=Config.BATCH)
 
     def update(self, delta_time: float) -> None:
         if not self.cursor or not self.frequency:
             self.cursor.x = -self.cursor.radius
+            self.trail.update(delta_time, False, None)
             return
         else:
-            self.cursor.x = Config.PLAY_LINE_X
+            self.cursor.x = Config.PLAY_LINE
             
         # Get the y position correlating to the audio frequency
         y_position = note_to_y_position(
@@ -118,11 +121,10 @@ class FrequencyCursor:
         active_note = self.song.active_note()
         if active_note and abs(active_note.note - self.midi_note) < Config.SNAP_THRESHOLD:
             y_position = active_note.shape_bg.y
-            active_note.completion += delta_time / active_note.duration
+            active_note.completion += delta_time / active_note.duration * (Config.SCROLL_SPEED / Config.NOTE_WIDTH_PER_SECOND)
         
 
-        # TODO cursor radius needs to be added at some point so it's in the center of the note, not sure where its best though yet
-        # Spherical linear interpolation
         current_y = self.cursor.y
-        self.cursor.y = current_y + \
-            (y_position - current_y) * min(delta_time * 15, 1)
+        self.cursor.y = current_y + (y_position - current_y) * min(delta_time * 10, 2) + self.cursor.radius
+
+        self.trail.update(delta_time, True, self.cursor.y)

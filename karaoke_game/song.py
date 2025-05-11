@@ -66,7 +66,7 @@ class Song:
         if len(self.notes) == 0:
             return None
         for note in self.notes:
-            if note.shape_bg.x < Config.PLAY_LINE_X and note.shape_bg.x + note.shape_bg.width > Config.PLAY_LINE_X:
+            if note.shape_bg.x < Config.PLAY_LINE and note.shape_bg.x + note.shape_bg.width > Config.PLAY_LINE:
                 return note
         
     def update(self, dt: float) -> None:
