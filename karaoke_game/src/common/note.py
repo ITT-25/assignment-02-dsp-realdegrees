@@ -9,27 +9,28 @@ BORDER_WIDTH = 1
 class Note:
     """Wraps a pyglet representation of a note and holds additional song relevant metadata."""
 
-    def __init__(self, duration: float, time: float, note: int, velocity: int, note_baseline: int) -> None:
+    def __init__(
+        self, duration: float, time: float, note: int, velocity: int, note_baseline: int
+    ) -> None:
         """Initialize the note with the provided duration and time"""
         self.completion = 0.0
         self.duration = duration
         self.velocity = velocity
         self.time = time
         self.note = note
-        
+
         print(f"Note: {self.note}, Time: {self.time}, Duration: {self.duration}")
-        
+
         # Calculate the y position based on the note's pitch relative to the baseline using the octave as well as the note's height
-        self.y = note_to_y_position(
-            self.note,
-            note_baseline
-        )
-        
+        self.y = note_to_y_position(self.note, note_baseline)
+
         x = Config.WINDOW_WIDTH + (self.time * Config.SCROLL_SPEED)
         width = self.duration * Config.NOTE_WIDTH_PER_SECOND
         height = Config.NOTE_HEIGHT
-        
-        self.base_color = Config.BASE_NOTE_COLORS[self.note % len(Config.BASE_NOTE_COLORS)]
+
+        self.base_color = Config.BASE_NOTE_COLORS[
+            self.note % len(Config.BASE_NOTE_COLORS)
+        ]
 
         self.shape_bg = RoundedRectangle(
             x=x,
@@ -38,7 +39,7 @@ class Note:
             height=height,
             color=Config.DEFAULT_NOTE_COLOR,
             radius=math.pi,
-            batch=Config.BATCH
+            batch=Config.BATCH,
         )
         self.shape_progress = RoundedRectangle(
             x=x + BORDER_WIDTH,
@@ -47,9 +48,9 @@ class Note:
             height=height - (BORDER_WIDTH * 2),
             color=self.base_color,
             radius=math.pi,
-            batch=Config.BATCH
+            batch=Config.BATCH,
         )
-        
+
     def update_position(self, current_song_time: float) -> None:
         """Update the note's X position and progress color based on the current song time and completion."""
         current_x_offset = (self.time - current_song_time) * Config.SCROLL_SPEED
@@ -74,4 +75,3 @@ class Note:
 
     def __repr__(self):
         return f"Note(duration={self.duration}, time={self.time}, note={self.note}, completion={self.completion})\n"
-

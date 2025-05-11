@@ -9,6 +9,7 @@ from src.common.voice import FrequencyCursor
 from pyglet.shapes import Line
 from pyglet.window import key
 
+
 class GameWindow(window.Window):
     def __init__(self, song: Song, cursor: FrequencyCursor, ui: UI):
         super().__init__(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT)
@@ -23,13 +24,20 @@ class GameWindow(window.Window):
         self.ui.init()
 
         # Init Playline
-        self.playline = Line(x=Config.PLAY_LINE, y=0, x2=Config.PLAY_LINE, y2=Config.WINDOW_HEIGHT, thickness=2, color=(255, 255, 255, 120), batch=Config.BATCH)
+        self.playline = Line(
+            x=Config.PLAY_LINE,
+            y=0,
+            x2=Config.PLAY_LINE,
+            y2=Config.WINDOW_HEIGHT,
+            thickness=2,
+            color=(255, 255, 255, 120),
+            batch=Config.BATCH,
+        )
 
     def reset(self):
         """Reset the game state."""
         self.song.reset()
 
-        
     def on_update(self, delta_time):
         self.cursor.update(delta_time)
         self.song.update(delta_time)
@@ -38,7 +46,7 @@ class GameWindow(window.Window):
     def on_draw(self):
         self.clear()
         Config.BATCH.draw()
-        
+
     def on_resize(self, width, height):
         Config.WINDOW_WIDTH = width
         Config.WINDOW_HEIGHT = height
@@ -50,18 +58,38 @@ class GameWindow(window.Window):
         super().on_close()
         app.exit()
 
+
 @click.command()
 @click.option(
-    "--song", "-s", required=True, help="The name of the song you want to play", type=str
+    "--song",
+    "-s",
+    required=True,
+    help="The name of the song you want to play",
+    type=str,
 )
 @click.option(
-    "--track", "-t", required=False, help="The index of the track that should be used for the voice match", type=int, default=0
+    "--track",
+    "-t",
+    required=False,
+    help="The index of the track that should be used for the voice match",
+    type=int,
+    default=0,
 )
 @click.option(
-    "--verbose", "-v", required=False, help="Logs the captured frequency, resulting MIDI note and octave", is_flag=True, default=False
+    "--verbose",
+    "-v",
+    required=False,
+    help="Logs the captured frequency, resulting MIDI note and octave",
+    is_flag=True,
+    default=False,
 )
 @click.option(
-    "--octave-offset", "-o", required=False, help="Offsets the octave of audio input by this amount (Set positive for deep voices and negative for high voices)", type=float, default=0
+    "--octave-offset",
+    "-o",
+    required=False,
+    help="Offsets the octave of audio input by this amount (Set positive for deep voices and negative for high voices)",
+    type=float,
+    default=0,
 )
 def run(song: str, track: int, verbose: bool, octave_offset: float):
     try:
@@ -69,11 +97,13 @@ def run(song: str, track: int, verbose: bool, octave_offset: float):
     except Exception:
         print("Unable to find the requested song.")
         available_songs = [
-            f"- {file.split('.')[0]}" for file in os.listdir(Config.SONG_DIRECTORY) if file.endswith(".mid")
+            f"- {file.split('.')[0]}"
+            for file in os.listdir(Config.SONG_DIRECTORY)
+            if file.endswith(".mid")
         ]
         print(f"Available songs:\n{chr(10).join(available_songs)}")
         return
-    
+
     song = Song(midi, track)
     voice = FrequencyCursor(song, octave_offset)
     ui = UI(song)
@@ -81,21 +111,23 @@ def run(song: str, track: int, verbose: bool, octave_offset: float):
     win = GameWindow(song, voice, ui)
     keys = key.KeyStateHandler()
     win.push_handlers(keys)
-    
+
     def update(dt):
         win.on_update(dt)
         if keys[key.R]:
             win.reset()
-            
+
         if verbose:
             frequency = voice.frequency if voice.frequency is not None else -1
             midi_note = voice.midi_note if voice.midi_note is not None else -1
-            
+
             pitch = midi_note % 12
             octave = midi_note // 12 - 1
-            
+
             if frequency != -1:
-                print(f"Frequency: {frequency:.2f} Hz, MIDI Note: {midi_note}, Pitch: {pitch}, Octave: {octave}")
+                print(
+                    f"Frequency: {frequency:.2f} Hz, MIDI Note: {midi_note}, Pitch: {pitch}, Octave: {octave}"
+                )
             else:
                 print("No frequency detected.")
 

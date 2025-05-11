@@ -7,7 +7,6 @@ if TYPE_CHECKING:
 
 
 class UI:
-
     def __init__(self, song: "Song"):
         self.song = song
 
@@ -57,5 +56,7 @@ class UI:
             self.score_label.text = self._get_score_text(score)
 
         if self.restart_label is not None:
-            completed, completed_since = self.song.is_completed() 
-            self.restart_label.visible = completed and completed_since > 1 # 1 sec buffer after comletion
+            completed, completed_since = self.song.is_completed()
+            self.restart_label.visible = (
+                completed and completed_since > 1
+            )  # 1 sec buffer after comletion

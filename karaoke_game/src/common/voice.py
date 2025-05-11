@@ -4,7 +4,14 @@ import numpy as np
 from pyaudio import PyAudio, paInt16
 from pyglet.shapes import Circle  # Line is no longer directly used here
 from src.config import Config
-from src.util import apply_window, detect_frequency, band_pass, freq_to_midi, note_to_y_position, smooth_signal
+from src.util import (
+    apply_window,
+    detect_frequency,
+    band_pass,
+    freq_to_midi,
+    note_to_y_position,
+    smooth_signal,
+)
 from src.common.trail import Trail  # Import the new Trail class
 
 if TYPE_CHECKING:
@@ -30,7 +37,7 @@ class FrequencyCursor:
             rate=Config.SAMPLING_RATE,
             input=True,
             frames_per_buffer=Config.BUFFER_SIZE,
-            input_device_index=self._get_input_device()
+            input_device_index=self._get_input_device(),
         )
 
         self._stop_event = threading.Event()
@@ -55,8 +62,7 @@ class FrequencyCursor:
         """Loop to continuously read audio data from the stream."""
         while not self._stop_event.is_set():
             try:
-                data = self.stream.read(
-                    Config.BUFFER_SIZE, exception_on_overflow=False)
+                data = self.stream.read(Config.BUFFER_SIZE, exception_on_overflow=False)
                 self._process_audio_data(data)
             except OSError as e:
                 print(f"An unexpected error occurred: {e}")
@@ -66,14 +72,24 @@ class FrequencyCursor:
     def _get_input_device(self) -> int:
         """Get the input device index for the audio stream."""
         info = self.audio.get_host_api_info_by_index(0)
-        numdevices = info.get('deviceCount')
+        numdevices = info.get("deviceCount")
 
         for i in range(0, numdevices):
-            if (self.audio.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
-                print("Input Device id ", i, " - ",
-                      self.audio.get_device_info_by_host_api_device_index(0, i).get('name'))
+            if (
+                self.audio.get_device_info_by_host_api_device_index(0, i).get(
+                    "maxInputChannels"
+                )
+            ) > 0:
+                print(
+                    "Input Device id ",
+                    i,
+                    " - ",
+                    self.audio.get_device_info_by_host_api_device_index(0, i).get(
+                        "name"
+                    ),
+                )
 
-        print('select audio device:')
+        print("select audio device:")
         return int(input())
 
     def _process_audio_data(self, raw_data: bytes) -> None:
@@ -90,7 +106,7 @@ class FrequencyCursor:
         # Apply audio processing pipeline
         data = band_pass(data, lowcut=85, highcut=255, fs=Config.SAMPLING_RATE)
         data = smooth_signal(data, window_size=128)
-        data = apply_window(data, window_type='hamming')
+        data = apply_window(data, window_type="hamming")
 
         # Update sliding window
         freq = detect_frequency(data, sample_rate=Config.SAMPLING_RATE)
@@ -99,8 +115,14 @@ class FrequencyCursor:
         self.midi_note = freq_to_midi(self.frequency) + int(8 * self.octave_offset)
 
     def init_cursor(self) -> None:
-        self.cursor = Circle(Config.PLAY_LINE, 0, Config.NOTE_HEIGHT // 2,
-                             segments=12, color=(255, 255, 255), batch=Config.BATCH)
+        self.cursor = Circle(
+            Config.PLAY_LINE,
+            0,
+            Config.NOTE_HEIGHT // 2,
+            segments=12,
+            color=(255, 255, 255),
+            batch=Config.BATCH,
+        )
 
     def update(self, delta_time: float) -> None:
         if not self.cursor or not self.frequency:
@@ -109,21 +131,23 @@ class FrequencyCursor:
             return
         else:
             self.cursor.x = Config.PLAY_LINE
-            
+
         # Get the y position correlating to the audio frequency
-        y_position = note_to_y_position(
-            self.midi_note,
-            self.song.note_baseline
-        )
-        
-        
+        y_position = note_to_y_position(self.midi_note, self.song.note_baseline)
+
         # Snap the target y position to the nearest note if within a certain range
         active_note = self.song.active_note()
-        if active_note and abs(active_note.note - self.midi_note) < Config.SNAP_THRESHOLD:
+        if (
+            active_note
+            and abs(active_note.note - self.midi_note) < Config.SNAP_THRESHOLD
+        ):
             y_position = active_note.shape_bg.y
-            active_note.completion += delta_time / active_note.duration * (Config.SCROLL_SPEED / Config.NOTE_WIDTH_PER_SECOND)
-        
+            active_note.completion += (
+                delta_time
+                / active_note.duration
+                * (Config.SCROLL_SPEED / Config.NOTE_WIDTH_PER_SECOND)
+            )
 
-        self.cursor.y += (y_position - self.cursor.y) * .2
+        self.cursor.y += (y_position - self.cursor.y) * 0.2
 
         self.trail.update(delta_time, True, self.cursor.y)
