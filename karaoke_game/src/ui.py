@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING
 from pyglet.text import Label
-from config import Config
+from src.config import Config
 
 if TYPE_CHECKING:
-    from song import Song
+    from src.common.song import Song
 
 
 class UI:

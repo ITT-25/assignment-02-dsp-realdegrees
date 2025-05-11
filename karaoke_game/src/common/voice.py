@@ -3,12 +3,12 @@ from collections import deque
 import numpy as np
 from pyaudio import PyAudio, paInt16
 from pyglet.shapes import Circle  # Line is no longer directly used here
-from config import Config
-from util import apply_window, detect_frequency, band_pass, freq_to_midi, note_to_y_position, smooth_signal
-from trail import Trail  # Import the new Trail class
+from src.config import Config
+from src.util import apply_window, detect_frequency, band_pass, freq_to_midi, note_to_y_position, smooth_signal
+from src.common.trail import Trail  # Import the new Trail class
 
 if TYPE_CHECKING:
-    from song import Song
+    from src.common.song import Song
 import threading
 
 

@@ -1,8 +1,8 @@
 from typing import Dict, List, Literal, cast
 from mido import MidiFile, Message
 
-from config import Config
-from note import Note
+from src.config import Config
+from src.common.note import Note
 
 class TypeSafeMidoMessage():
     song_baseline: int = 0

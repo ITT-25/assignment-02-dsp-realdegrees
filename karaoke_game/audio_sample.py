@@ -2,7 +2,7 @@ import pyaudio
 import numpy as np
 from matplotlib import pyplot as plt
 
-from util import apply_window, band_pass, detect_frequency, freq_to_midi, smooth_signal
+from src.util import apply_window, band_pass, detect_frequency, freq_to_midi, smooth_signal
 
 # Set up audio stream
 # reduce chunk size and sampling rate for lower latency

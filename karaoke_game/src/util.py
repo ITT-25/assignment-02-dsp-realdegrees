@@ -2,7 +2,7 @@ import numpy as np
 from scipy.signal import get_window, butter, sosfilt, savgol_filter
 from scipy.fft import rfft, rfftfreq
 
-from config import Config
+from src.config import Config
 
 def band_pass(signal: np.ndarray, lowcut: float, highcut: float, fs: int) -> np.ndarray:
     """Apply a Butterworth bandpass filter to the data."""

@@ -12,7 +12,7 @@ class Config:
     WINDOW_WIDTH = 1200
     WINDOW_HEIGHT = 800
     SONG_DIRECTORY = os.path.abspath(os.path.join(
-        os.path.dirname(__file__), "songs")) + os.sep
+        os.path.dirname(__file__), "..", "songs")) + os.sep
     BATCH = Batch()
     
     PLAY_LINE = min(500, WINDOW_WIDTH // 3)

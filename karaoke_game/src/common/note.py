@@ -1,7 +1,7 @@
 import math
 from pyglet.shapes import RoundedRectangle
-from config import Config
-from util import note_to_y_position
+from src.config import Config
+from src.util import note_to_y_position
 
 BORDER_WIDTH = 1
 

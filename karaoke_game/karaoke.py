@@ -1,11 +1,11 @@
 import os
 from mido import MidiFile
 from pyglet import window, clock, app
-from config import Config
+from src.config import Config
 import click
-from ui import UI
-from song import Song
-from voice import FrequencyCursor
+from src.ui import UI
+from src.common.song import Song
+from src.common.voice import FrequencyCursor
 from pyglet.shapes import Line
 from pyglet.window import key
 

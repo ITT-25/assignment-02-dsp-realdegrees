@@ -2,7 +2,7 @@ from collections import deque
 from itertools import groupby
 from typing import Deque, List, Optional
 from pyglet.shapes import MultiLine
-from config import Config
+from src.config import Config
 
 class Trail:
     def __init__(self):
