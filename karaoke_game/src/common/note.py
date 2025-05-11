@@ -24,7 +24,7 @@ class Note:
         # Calculate the y position based on the note's pitch relative to the baseline using the octave as well as the note's height
         self.y = note_to_y_position(self.note, note_baseline)
 
-        x = Config.WINDOW_WIDTH + (self.time * Config.SCROLL_SPEED)
+        x = Config.WINDOW_WIDTH + (self.time * Config.NOTE_WIDTH_PER_SECOND)
         width = self.duration * Config.NOTE_WIDTH_PER_SECOND
         height = Config.NOTE_HEIGHT
 

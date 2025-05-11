@@ -25,12 +25,13 @@ class Song:
     notes: List[Note] = []
     total_time: float = 0.0
 
-    def __init__(self, file: MidiFile, track: int) -> None:
+    def __init__(self, file: MidiFile, track: int, time_scale: float) -> None:
         """Load and initialize the provided song"""
         self.file = file
         self.track = track
         self.total_time = 0.0
         self.song_time = 0.0
+        self.time_scale = time_scale
 
     def reset(self) -> None:
         """Reset the song's state"""
@@ -53,8 +54,9 @@ class Song:
                 continue
 
             note = TypeSafeMidoMessage(msg)
-            note.time /= 1000
+            note.time /= 1000 * (1 + self.time_scale)
             time += note.time
+
 
             if note.type == "note_on":
                 note_cache[note.note] = time
@@ -63,7 +65,7 @@ class Song:
                 note.duration = time - start_time
                 note.time = start_time
                 notes.append(note)
-
+            
         min_time = min([note.time for note in notes])
         self.note_baseline = min([note.note for note in notes])
 

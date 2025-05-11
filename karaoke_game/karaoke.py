@@ -92,6 +92,14 @@ class GameWindow(window.Window):
     default=0,
 )
 @click.option(
+    "--time-scale",
+    "-ts",
+    required=False,
+    help="Sets the time scale for the audio input [default: 1]",
+    type=float,
+    default=1,
+)
+@click.option(
     "--assist",
     "-a",
     required=False,
@@ -99,7 +107,7 @@ class GameWindow(window.Window):
     type=int,
     default=3,
 )
-def run(song: str, track: int, verbose: bool, octave_offset: float, assist: int):
+def run(song: str, track: int, verbose: bool, octave_offset: float, assist: int, time_scale: float):
     try:
         midi = MidiFile(Config.SONG_DIRECTORY + song + ".mid")
     except Exception:
@@ -112,7 +120,7 @@ def run(song: str, track: int, verbose: bool, octave_offset: float, assist: int)
         print(f"Available songs:\n{chr(10).join(available_songs)}")
         return
 
-    song = Song(midi, track)
+    song = Song(midi, track, time_scale)
     voice = FrequencyCursor(song, assist, octave_offset)
     ui = UI(song)
 

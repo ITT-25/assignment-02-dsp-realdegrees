@@ -35,6 +35,9 @@ To close the program press `ESC`.
 If you want to adjust the difficulty use the parameter `-a`:  
     `python karaoke_game/karaoke.py -o 1.3 -s "selectedsong" -a 4`
 
+If a midi file seems too slow or too fast you can adjust the `--time-scale`.
+    `python karaoke_game/karaoke.py -o 1.3 -s "selectedsong" -ts 2`
+
 To see a log of the frequencies, midi notes and octaves use the `-v` flag.
 
 **Known Issues**
