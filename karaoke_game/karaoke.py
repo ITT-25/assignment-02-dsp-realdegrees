@@ -71,7 +71,7 @@ class GameWindow(window.Window):
     "--track",
     "-t",
     required=False,
-    help="The index of the track that should be used for the voice match",
+    help="The index of the track that should be used for the voice match [default: 0]",
     type=int,
     default=0,
 )
@@ -79,7 +79,7 @@ class GameWindow(window.Window):
     "--verbose",
     "-v",
     required=False,
-    help="Logs the captured frequency, resulting MIDI note and octave",
+    help="Logs the captured frequency, resulting MIDI note and octave [default: False]",
     is_flag=True,
     default=False,
 )
@@ -87,11 +87,19 @@ class GameWindow(window.Window):
     "--octave-offset",
     "-o",
     required=False,
-    help="Offsets the octave of audio input by this amount (Set positive for deep voices and negative for high voices)",
+    help="Offsets the octave of audio input by this amount (Set positive for deep voices and negative for high voices) [default: 0]",
     type=float,
     default=0,
 )
-def run(song: str, track: int, verbose: bool, octave_offset: float):
+@click.option(
+    "--assist",
+    "-a",
+    required=False,
+    help="Sets the assistance level of the game, the higher the assistance level the earlier the frequency cursor will snap to the nearest note [default: 3]",
+    type=int,
+    default=3,
+)
+def run(song: str, track: int, verbose: bool, octave_offset: float, assist: int):
     try:
         midi = MidiFile(Config.SONG_DIRECTORY + song + ".mid")
     except Exception:
@@ -105,7 +113,7 @@ def run(song: str, track: int, verbose: bool, octave_offset: float):
         return
 
     song = Song(midi, track)
-    voice = FrequencyCursor(song, octave_offset)
+    voice = FrequencyCursor(song, assist, octave_offset)
     ui = UI(song)
 
     win = GameWindow(song, voice, ui)

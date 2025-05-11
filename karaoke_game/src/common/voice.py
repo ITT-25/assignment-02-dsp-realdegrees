@@ -25,8 +25,9 @@ class FrequencyCursor:
     midi_note: Optional[int] = None
     freq_window: Deque[float] = deque(maxlen=3)
 
-    def __init__(self, song: "Song", octave_offset: float = 0.0) -> None:
+    def __init__(self, song: "Song", assist: int, octave_offset: float) -> None:
         self.song = song
+        self.assist = assist
         self.octave_offset = octave_offset
         self.audio = PyAudio()
         self.trail = Trail()  # Instantiate Trail handler
@@ -139,7 +140,7 @@ class FrequencyCursor:
         active_note = self.song.active_note()
         if (
             active_note
-            and abs(active_note.note - self.midi_note) < Config.SNAP_THRESHOLD
+            and abs(active_note.note - self.midi_note) <= self.assist
         ):
             y_position = active_note.shape_bg.y
             active_note.completion += (

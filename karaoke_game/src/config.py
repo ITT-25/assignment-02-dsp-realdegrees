@@ -9,7 +9,6 @@ class Config:
     )  # ! Buffer minimum 8 or jumps will happen at lower frequencies
     AMPLITUDE_THRESHOLD = 250
 
-    SNAP_THRESHOLD = 4
     SCROLL_SPEED = 200  # Pixels per second for notes and trail
 
     WINDOW_WIDTH = 1200
