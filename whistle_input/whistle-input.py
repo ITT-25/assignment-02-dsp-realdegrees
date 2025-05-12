@@ -6,6 +6,8 @@ from src.common.voice import Voice
 
 from pyglet.window import key
 
+from src.ui import UI
+
 
 class GameWindow(window.Window):
     def __init__(self, voice: Voice, demo: bool):
@@ -14,17 +16,17 @@ class GameWindow(window.Window):
         self.set_visible(demo)
         self.voice = voice
         self.voice.start_audio_loop()
+        self.ui = UI()
 
     def on_update(self, delta_time):
         self.voice.update(delta_time)
+        self.ui.update()
         
     def on_key_press(self, symbol, modifiers):
         if symbol == key.UP:
-            print("UP key pressed")
-            # TODO call UI function to decrement index
+            self.ui.increment_index()
         elif symbol == key.DOWN:   
-            print("DOWN key pressed")
-            # TODO call UI function to increment index
+            self.ui.decrement_index()
         return super().on_key_press(symbol, modifiers)
 
     def on_draw(self):
@@ -64,8 +66,6 @@ def run(
     demo: bool,
 ):
     voice = Voice()
-
-
     win = GameWindow(voice, demo)
     keys = key.KeyStateHandler()
     win.push_handlers(keys)

@@ -8,9 +8,12 @@ class Config:
     )
     AMPLITUDE_THRESHOLD = 250
 
-    WINDOW_WIDTH = 1200
-    WINDOW_HEIGHT = 800
+    WINDOW_WIDTH = 800
+    WINDOW_HEIGHT = 500
     
     BATCH = Batch()
     
     NUM_BOXES = 5
+    BOX_WIDTH = 300
+    BOX_HEIGHT = 80
+    GAP = 10
