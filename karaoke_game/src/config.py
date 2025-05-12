@@ -31,6 +31,12 @@ class Config:
         (0, 255, 128),  # Cyan
         (255, 0, 128),  # Magenta
         (128, 255, 0),  # Lime
+        (255, 0, 0),    # Red
+        (0, 255, 0),    # Green
+        (0, 0, 255),    # Blue (Dark)
+        (255, 255, 0),  # Yellow
+        (0, 255, 255),  # Aqua
+        (255, 0, 255),  # Fuchsia
     ]
     NOTE_HEIGHT = 18
     NOTE_WIDTH_PER_SECOND = 200

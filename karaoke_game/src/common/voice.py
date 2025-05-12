@@ -134,7 +134,7 @@ class FrequencyCursor:
             self.cursor.x = Config.PLAY_LINE + Config.NOTE_WIDTH_PER_SECOND * 0.1
 
         # Get the y position correlating to the audio frequency
-        y_position = note_to_y_position(self.midi_note, self.song.note_baseline)
+        y_position = note_to_y_position(self.midi_note, self.song.note_baseline) + Config.NOTE_HEIGHT // 2
 
         # Snap the target y position to the nearest note if within a certain range
         active_note = self.song.active_note()
@@ -142,7 +142,7 @@ class FrequencyCursor:
             active_note
             and abs(active_note.note - self.midi_note) <= self.assist
         ):
-            y_position = active_note.shape_bg.y
+            y_position = active_note.shape_bg.y + Config.NOTE_HEIGHT // 2
             active_note.completion += (
                 delta_time
                 / active_note.duration
@@ -154,5 +154,22 @@ class FrequencyCursor:
             min(self.cursor.y, Config.WINDOW_HEIGHT - self.cursor.radius),
             self.cursor.radius,
         )
+
+        # Update cursor color
+        if self.midi_note is not None:
+            target_color = Config.BASE_NOTE_COLORS[
+                self.midi_note % len(Config.BASE_NOTE_COLORS)
+            ]
+            current_color_tuple = self.cursor.color
+            current_r, current_g, current_b = current_color_tuple[:3]
+            target_r, target_g, target_b = target_color
+
+            lerp_factor = 0.1
+            new_r = int(current_r + (target_r - current_r) * lerp_factor)
+            new_g = int(current_g + (target_g - current_g) * lerp_factor)
+            new_b = int(current_b + (target_b - current_b) * lerp_factor)
+            self.cursor.color = (new_r, new_g, new_b)
+        else:
+            self.cursor.color = (255, 255, 255)
 
         self.trail.update(delta_time, True, self.cursor.y)
