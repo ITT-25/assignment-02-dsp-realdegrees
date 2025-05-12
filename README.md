@@ -40,9 +40,6 @@ If a midi file seems too slow or too fast you can adjust the `--time-scale`.
 
 To see a log of the frequencies, midi notes and octaves use the `-v` flag.
 
-**Known Issues**
-- The frequency cursor is slightly smoothed so the trail looks better which leads to a very slight *but deliberate* visual delay, the actual frequency which is slightly ahead of the visual cursor is used to match the score and there should be barely any delay.
-
 # whistle_input
 
 ## Usage

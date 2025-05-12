@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 from pyglet.text import Label
 from src.config import Config
+from pyglet.shapes import Line
 
 if TYPE_CHECKING:
     from src.common.song import Song
@@ -26,13 +27,33 @@ class UI:
 
         self.restart_label = Label(
             text="R = Restart | ESC = Exit",
-            x=Config.WINDOW_WIDTH / 2,
+            x=Config.PLAY_LINE + (Config.WINDOW_WIDTH - Config.PLAY_LINE) / 2,
             y=Config.WINDOW_HEIGHT / 2,
             font_size=24,
             color=(235, 255, 235, 255),
             batch=Config.BATCH,
             anchor_x="center",
             anchor_y="center",
+        )
+        
+                # Init Playline
+        self.playline = Line(
+            x=Config.PLAY_LINE,
+            y=0,
+            x2=Config.PLAY_LINE,
+            y2=Config.WINDOW_HEIGHT,
+            thickness=2,
+            color=(255, 255, 255, 120),
+            batch=Config.BATCH,
+        )
+        self.play_window_start = Line(
+            x=Config.PLAY_LINE + Config.NOTE_WIDTH_PER_SECOND * 0.2,
+            y=0,
+            x2=Config.PLAY_LINE + Config.NOTE_WIDTH_PER_SECOND * 0.2,
+            y2=Config.WINDOW_HEIGHT,
+            thickness=2,
+            color=(255, 255, 255, 120),
+            batch=Config.BATCH,
         )
 
     def _get_score(self) -> float:

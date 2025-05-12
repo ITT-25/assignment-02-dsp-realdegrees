@@ -3,9 +3,9 @@ from pyglet.graphics import Batch
 
 
 class Config:
-    SAMPLING_RATE = 1024 * 4 * 10
+    SAMPLING_RATE = 1024 * 4 * 2
     BUFFER_SIZE = (
-        1024 * 16
+        512 * 2
     )  # ! Buffer minimum 8 or jumps will happen at lower frequencies
     AMPLITUDE_THRESHOLD = 250
 
@@ -34,3 +34,4 @@ class Config:
     ]
     NOTE_HEIGHT = 18
     NOTE_WIDTH_PER_SECOND = 200
+    NOTE_VERTICAL_GAP = 5

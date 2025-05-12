@@ -6,7 +6,8 @@ import click
 from src.ui import UI
 from src.common.song import Song
 from src.common.voice import FrequencyCursor
-from pyglet.shapes import Line
+
+
 from pyglet.window import key
 
 
@@ -22,17 +23,6 @@ class GameWindow(window.Window):
         self.song.init_notes()
         self.ui = ui
         self.ui.init()
-
-        # Init Playline
-        self.playline = Line(
-            x=Config.PLAY_LINE,
-            y=0,
-            x2=Config.PLAY_LINE,
-            y2=Config.WINDOW_HEIGHT,
-            thickness=2,
-            color=(255, 255, 255, 120),
-            batch=Config.BATCH,
-        )
 
     def reset(self):
         """Reset the game state."""

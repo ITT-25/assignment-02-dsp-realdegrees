@@ -105,8 +105,8 @@ class FrequencyCursor:
             return
 
         # Apply audio processing pipeline
-        data = band_pass(data, lowcut=85, highcut=255, fs=Config.SAMPLING_RATE)
-        data = smooth_signal(data, window_size=128)
+        data = band_pass(data, lowcut=80, highcut=300, fs=Config.SAMPLING_RATE)
+        data = smooth_signal(data, window_size=56)
         data = apply_window(data, window_type="hamming")
 
         # Update sliding window
@@ -131,7 +131,7 @@ class FrequencyCursor:
             self.trail.update(delta_time, False, None)
             return
         else:
-            self.cursor.x = Config.PLAY_LINE
+            self.cursor.x = Config.PLAY_LINE + Config.NOTE_WIDTH_PER_SECOND * 0.1
 
         # Get the y position correlating to the audio frequency
         y_position = note_to_y_position(self.midi_note, self.song.note_baseline)
@@ -150,5 +150,9 @@ class FrequencyCursor:
             )
 
         self.cursor.y += (y_position - self.cursor.y) * 0.2
+        self.cursor.y = max(
+            min(self.cursor.y, Config.WINDOW_HEIGHT - self.cursor.radius),
+            self.cursor.radius,
+        )
 
         self.trail.update(delta_time, True, self.cursor.y)
