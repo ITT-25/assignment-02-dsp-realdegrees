@@ -97,7 +97,14 @@ class GameWindow(window.Window):
     type=int,
     default=3,
 )
-def run(song: str, track: int, verbose: bool, octave_offset: float, assist: int, time_scale: float):
+def run(
+    song: str,
+    track: int,
+    verbose: bool,
+    octave_offset: float,
+    assist: int,
+    time_scale: float,
+):
     try:
         midi = MidiFile(Config.SONG_DIRECTORY + song + ".mid")
     except Exception:

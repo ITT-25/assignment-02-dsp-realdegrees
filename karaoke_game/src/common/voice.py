@@ -134,14 +134,14 @@ class FrequencyCursor:
             self.cursor.x = Config.PLAY_LINE + Config.NOTE_WIDTH_PER_SECOND * 0.1
 
         # Get the y position correlating to the audio frequency
-        y_position = note_to_y_position(self.midi_note, self.song.note_baseline) + Config.NOTE_HEIGHT // 2
+        y_position = (
+            note_to_y_position(self.midi_note, self.song.note_baseline)
+            + Config.NOTE_HEIGHT // 2
+        )
 
         # Snap the target y position to the nearest note if within a certain range
         active_note = self.song.active_note()
-        if (
-            active_note
-            and abs(active_note.note - self.midi_note) <= self.assist
-        ):
+        if active_note and abs(active_note.note - self.midi_note) <= self.assist:
             y_position = active_note.shape_bg.y + Config.NOTE_HEIGHT // 2
             active_note.completion += (
                 delta_time

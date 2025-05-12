@@ -57,7 +57,6 @@ class Song:
             note.time /= 1000 * (1 + self.time_scale)
             time += note.time
 
-
             if note.type == "note_on":
                 note_cache[note.note] = time
             elif note.type == "note_off" and note.note in note_cache:
@@ -65,7 +64,7 @@ class Song:
                 note.duration = time - start_time
                 note.time = start_time
                 notes.append(note)
-            
+
         min_time = min([note.time for note in notes])
         self.note_baseline = min([note.note for note in notes])
 

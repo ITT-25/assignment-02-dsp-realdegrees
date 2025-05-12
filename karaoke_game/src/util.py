@@ -58,5 +58,7 @@ def note_to_y_position(note: int, note_baseline: int) -> float:
     return (
         Config.BASELINE_Y
         + (pitch - pitch_baseline) * (Config.NOTE_HEIGHT + Config.NOTE_VERTICAL_GAP)
-        + (octave - octave_baseline) * (Config.NOTE_HEIGHT + Config.NOTE_VERTICAL_GAP) * 12
+        + (octave - octave_baseline)
+        * (Config.NOTE_HEIGHT + Config.NOTE_VERTICAL_GAP)
+        * 12
     )

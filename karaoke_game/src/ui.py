@@ -35,8 +35,8 @@ class UI:
             anchor_x="center",
             anchor_y="center",
         )
-        
-                # Init Playline
+
+        # Init Playline
         self.playline = Line(
             x=Config.PLAY_LINE,
             y=0,

@@ -6,7 +6,7 @@ class Config:
     SAMPLING_RATE = 1024 * 4 * 2
     BUFFER_SIZE = (
         512 * 2
-    )  # ! Buffer minimum 8 or jumps will happen at lower frequencies
+    )
     AMPLITUDE_THRESHOLD = 250
 
     SCROLL_SPEED = 200  # Pixels per second for notes and trail
@@ -19,7 +19,6 @@ class Config:
     BATCH = Batch()
 
     PLAY_LINE = min(500, WINDOW_WIDTH // 3)
-
     BASELINE_Y = WINDOW_HEIGHT // 2
 
     COMPLETED_NOTE_COLOR = (255, 215, 0)  # Gold
@@ -31,9 +30,9 @@ class Config:
         (0, 255, 128),  # Cyan
         (255, 0, 128),  # Magenta
         (128, 255, 0),  # Lime
-        (255, 0, 0),    # Red
-        (0, 255, 0),    # Green
-        (0, 0, 255),    # Blue (Dark)
+        (255, 0, 0),  # Red
+        (0, 255, 0),  # Green
+        (0, 0, 255),  # Blue (Dark)
         (255, 255, 0),  # Yellow
         (0, 255, 255),  # Aqua
         (255, 0, 255),  # Fuchsia
