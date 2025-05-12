@@ -9,6 +9,13 @@
 
 # karaoke_game
 
+This program launches a game that attempts to recreate the game logic of singstar.  
+The CLI can be used for several options like song selection or octave offsets.  
+
+Once the game is launched the selected midi file is converted to notes that are displayed on the screen and fly from the right side 
+of the screen to the left side. While they cross the play line on the left side of the screen, the user can use their voice to move the frequency cursor 
+up and down the playline to score points if a note and the user's voice match.  
+
 ## Usage
 
 Help Command: `python ./karaoke_game/karaoke.py --help`
@@ -42,6 +49,18 @@ To see a log of the frequencies, midi notes and octaves use the `-v` flag.
 
 # whistle_input
 
+This program emulates up/down key presses based on a directional change of the user's voice pitch.  
+It includes a demo mode with several rectangles that can be selected using the arrow keys, which are also emulated via voice input.  
+
 ## Usage
 
-TODO: launch command, controls, description
+Help Command: `python ./whistle_input/whistle-input.py --help`
+
+1. Run the application in demo mode to view the demo UI
+    `python ./whistle_input/whistle-input.py -d`
+2. Make a `ooouuuiii` sound (low to high pitch) to emulate `Key.UP`
+3. Make a `iiiuuuooo` sound (high to low pitch) to emulate `Key.DOWN`
+
+The button presses are emulated using `pynput` and are broadcasted to the entire system.  
+You can **omit** the `-d` flag to run the program in the background.  
+Use the `-v` flag for frequency logs.
