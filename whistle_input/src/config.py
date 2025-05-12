@@ -17,3 +17,5 @@ class Config:
     BOX_WIDTH = 300
     BOX_HEIGHT = 80
     GAP = 10
+    
+    FREQUENCY_MATCH_RANGE = 150 # Hz

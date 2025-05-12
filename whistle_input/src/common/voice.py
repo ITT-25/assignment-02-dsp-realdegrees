@@ -91,7 +91,6 @@ class Voice:
         # Check if the signal is too weak (no voice input)
         if np.abs(data).mean() < Config.AMPLITUDE_THRESHOLD:
             self.frequency = None
-            self.midi_note = None
             return
 
         # Apply audio processing pipeline

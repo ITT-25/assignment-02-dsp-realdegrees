@@ -68,7 +68,7 @@ def run(
     demo: bool,
 ):
     voice = Voice()
-    virtual_input = VirtualInput(voice)
+    virtual_input = VirtualInput(voice, verbose)
     win = GameWindow(voice, virtual_input, demo)
     keys = key.KeyStateHandler()
     win.push_handlers(keys)
