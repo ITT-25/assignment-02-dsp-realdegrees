@@ -103,9 +103,3 @@ class Voice:
         freq = detect_frequency(data, sample_rate=Config.SAMPLING_RATE)
         self.freq_window.append(freq)
         self.frequency = sum(self.freq_window) / len(self.freq_window)
-
-    def update(self, delta_time: float) -> None:
-        if not self.frequency:
-            return
-
-        # TODO: Store frequency history in memory and detect changes in pitch to determine button input simulation

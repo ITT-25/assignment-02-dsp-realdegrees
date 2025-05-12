@@ -7,21 +7,23 @@ from src.common.voice import Voice
 from pyglet.window import key
 
 from src.ui import UI
+from src.virtual_input import VirtualInput
 
 
 class GameWindow(window.Window):
-    def __init__(self, voice: Voice, demo: bool):
+    def __init__(self, voice: Voice, virtual_input: VirtualInput, demo: bool):
         super().__init__(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT)
         self.set_caption("Karaoke Game")
         self.set_visible(demo)
         self.voice = voice
+        self.virtual_input = virtual_input
         self.voice.start_audio_loop()
         self.ui = UI()
 
     def on_update(self, delta_time):
-        self.voice.update(delta_time)
+        self.virtual_input.update(delta_time)
         self.ui.update()
-        
+
     def on_key_press(self, symbol, modifiers):
         if symbol == key.UP:
             self.ui.increment_index()
@@ -66,7 +68,8 @@ def run(
     demo: bool,
 ):
     voice = Voice()
-    win = GameWindow(voice, demo)
+    virtual_input = VirtualInput(voice)
+    win = GameWindow(voice, virtual_input, demo)
     keys = key.KeyStateHandler()
     win.push_handlers(keys)
 
