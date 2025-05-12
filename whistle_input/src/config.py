@@ -12,3 +12,5 @@ class Config:
     WINDOW_HEIGHT = 800
     
     BATCH = Batch()
+    
+    NUM_BOXES = 5

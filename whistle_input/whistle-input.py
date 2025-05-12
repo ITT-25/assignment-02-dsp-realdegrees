@@ -8,10 +8,10 @@ from pyglet.window import key
 
 
 class GameWindow(window.Window):
-    def __init__(self, voice: Voice):
+    def __init__(self, voice: Voice, demo: bool):
         super().__init__(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT)
         self.set_caption("Karaoke Game")
-        self.set_visible(True)
+        self.set_visible(demo)
         self.voice = voice
         self.voice.start_audio_loop()
 
@@ -21,8 +21,10 @@ class GameWindow(window.Window):
     def on_key_press(self, symbol, modifiers):
         if symbol == key.UP:
             print("UP key pressed")
+            # TODO call UI function to decrement index
         elif symbol == key.DOWN:   
             print("DOWN key pressed")
+            # TODO call UI function to increment index
         return super().on_key_press(symbol, modifiers)
 
     def on_draw(self):
@@ -49,12 +51,22 @@ class GameWindow(window.Window):
     is_flag=True,
     default=False,
 )
+@click.option(
+    "--demo",
+    "-d",
+    required=False,
+    help="Runs the demo mode [default: False]",
+    is_flag=True,
+    default=False,
+)
 def run(
     verbose: bool,
+    demo: bool,
 ):
     voice = Voice()
 
-    win = GameWindow(voice)
+
+    win = GameWindow(voice, demo)
     keys = key.KeyStateHandler()
     win.push_handlers(keys)
 
