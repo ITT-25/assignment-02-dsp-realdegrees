@@ -63,12 +63,22 @@ class GameWindow(window.Window):
     is_flag=True,
     default=False,
 )
+@click.option(
+    "--range",
+    "-r",
+    required=False,
+    help="Sets the frequency range (delta between low and high tone) required to register as a button press [default: 150]",
+    type=int,
+    metavar="RANGE",
+    default=150,
+)
 def run(
     verbose: bool,
     demo: bool,
+    range: int,
 ):
     voice = Voice()
-    virtual_input = VirtualInput(voice, verbose)
+    virtual_input = VirtualInput(voice, range, verbose)
     win = GameWindow(voice, virtual_input, demo)
     keys = key.KeyStateHandler()
     win.push_handlers(keys)

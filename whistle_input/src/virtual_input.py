@@ -10,9 +10,10 @@ keyboard = Controller()
 class VirtualInput:
     history: Deque[Optional[tuple[float, float]]] = deque(maxlen=20)
     
-    def __init__(self, voice: Voice, verbose: bool):
+    def __init__(self, voice: Voice, range: int, verbose: bool):
         self.voice = voice
         self.verbose = verbose
+        self.range = range
         
     def update(self, delta_time: float):
         # ! dt might not be needed actually
@@ -34,7 +35,7 @@ class VirtualInput:
         
         # Calc the frequency range of the segment and return if the range is not within the threshold
         # Clear the history if the segment is complete and the frequency range was not matched
-        frequency_range_match = abs(segment_frequency_delta) >= Config.FREQUENCY_MATCH_RANGE
+        frequency_range_match = abs(segment_frequency_delta) >= self.range
         if not frequency_range_match and self.voice.frequency is None:
             if self.verbose:
                 print("Segment complete > Range not matched: Clearing history")
