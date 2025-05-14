@@ -141,8 +141,6 @@ def run(
                 print(
                     f"Frequency: {frequency:.2f} Hz, MIDI Note: {midi_note}, Pitch: {pitch}, Octave: {octave}"
                 )
-            else:
-                print("No frequency detected.")
 
     clock.schedule_interval(update, 1 / 60.0)
     app.run()

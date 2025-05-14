@@ -64,21 +64,20 @@ class GameWindow(window.Window):
     default=False,
 )
 @click.option(
-    "--range",
-    "-r",
+    "--sensitivity",
+    "-s",
     required=False,
-    help="Sets the frequency range (delta between low and high tone) required to register as a button press [default: 150]",
+    help="Sets the sensitivity (0-10) [default: 10]",
     type=int,
-    metavar="RANGE",
-    default=150,
+    default=6,
 )
 def run(
     verbose: bool,
     demo: bool,
-    range: int,
+    sensitivity: int,
 ):
     voice = Voice()
-    virtual_input = VirtualInput(voice, range, verbose)
+    virtual_input = VirtualInput(voice, sensitivity, verbose)
     win = GameWindow(voice, virtual_input, demo)
     keys = key.KeyStateHandler()
     win.push_handlers(keys)
@@ -87,13 +86,12 @@ def run(
         win.on_update(dt)
 
         if verbose:
-            frequency = voice.frequency if voice.frequency is not None else -1
+            frequency = f"{voice.frequency:.2f}" if voice.frequency is not None else "None"
+            slope = f"{virtual_input.slope:.2f}" if virtual_input.slope is not None else "None"
             if frequency != -1:
                 print(
-                    f"Frequency: {frequency:.2f} Hz"
+                    f"Frequency: {frequency} Hz, Slope: {slope}"
                 )
-            else:
-                print("No frequency detected.")
 
     clock.schedule_interval(update, 1 / 60.0)
     app.run()

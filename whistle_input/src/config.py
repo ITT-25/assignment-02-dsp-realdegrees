@@ -2,11 +2,11 @@ from pyglet.graphics import Batch
 
 
 class Config:
-    SAMPLING_RATE = 1024 * 4 * 2
+    SAMPLING_RATE = 1024 * 4 * 8
     BUFFER_SIZE = (
-        512 * 2
+        512 * 4
     )
-    AMPLITUDE_THRESHOLD = 250
+    AMPLITUDE_THRESHOLD = 800
 
     WINDOW_WIDTH = 800
     WINDOW_HEIGHT = 500
@@ -18,4 +18,3 @@ class Config:
     BOX_HEIGHT = 80
     GAP = 10
     
-    FREQUENCY_MATCH_RANGE = 150 # Hz

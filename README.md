@@ -61,11 +61,12 @@ Help Command: `python ./whistle_input/whistle-input.py --help`
 2. Make a `ooouuuiii` sound (low to high pitch) to emulate `Key.UP`
 3. Make a `iiiuuuooo` sound (high to low pitch) to emulate `Key.DOWN`
 
-Button presses are only triggered when a specific frequency range is covered by the incoming audio stream.  
-This range defaults to `150 Hz` and can be adjust using the `-r` parameter.  
-Lower values result in higher sensitivity but might gie wrong inputs while high values result in very low sensitivy and could 
-lead to the sound not triggering a key press.  
-
 The button presses are emulated using `pynput` and are broadcasted to the entire system.  
 You can **omit** the `-d` flag to run the program in the background.  
-Use the `-v` flag for frequency logs.
+Use the `-v` flag for logs.
+
+Depending on the microphone used and background noise level, the `--sensitivity` might need to be adjusted.  
+The sensitivity can range from `0` to `10` and defaults to `6`. 
+
+After testing with a studio microphone at my PC setup both whistling and `ìioouu/oouuii` sound worked reliable to emulate arrow keys.  
+Speech and "non pitch-changing" were mostly filtered out as well.  

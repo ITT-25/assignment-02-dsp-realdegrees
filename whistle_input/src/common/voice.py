@@ -17,7 +17,7 @@ import threading
 class Voice:
     cursor: Optional[Circle] = None
     frequency: Optional[float] = None
-    freq_window: Deque[float] = deque(maxlen=3)
+    freq_window: Deque[float] = deque(maxlen=1)
 
     def __init__(self) -> None:
         self.audio = PyAudio()
@@ -94,8 +94,8 @@ class Voice:
             return
 
         # Apply audio processing pipeline
-        data = band_pass(data, lowcut=80, highcut=300, fs=Config.SAMPLING_RATE)
-        data = smooth_signal(data, window_size=56)
+        data = band_pass(data, lowcut=80, highcut=2000, fs=Config.SAMPLING_RATE)
+        data = smooth_signal(data, window_size=128)
         data = apply_window(data, window_type="hamming")
 
         # Update sliding window
