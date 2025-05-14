@@ -58,8 +58,9 @@ Help Command: `python ./whistle_input/whistle-input.py --help`
 
 1. Run the application in demo mode to view the demo UI
     `python ./whistle_input/whistle-input.py -d`
-2. Make a `ooouuuiii` sound (low to high pitch) to emulate `Key.UP`
-3. Make a `iiiuuuooo` sound (high to low pitch) to emulate `Key.DOWN`
+2. Select your microphone in the prompt 
+3. Make a `ooouuuiii` sound (low to high pitch) to emulate `Key.UP`
+4. Make a `iiiuuuooo` sound (high to low pitch) to emulate `Key.DOWN`
 
 The button presses are emulated using `pynput` and are broadcasted to the entire system.  
 You can **omit** the `-d` flag to run the program in the background.  
